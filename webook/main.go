@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -9,6 +11,7 @@ import (
 	"inspobox/webook/internal/repository/dao"
 	"inspobox/webook/internal/service"
 	"inspobox/webook/internal/web"
+	"inspobox/webook/internal/web/middleware"
 	"strings"
 	"time"
 )
@@ -45,6 +48,15 @@ func initWebServer() *gin.Engine {
 		},
 		MaxAge: 12 * time.Hour,
 	}))
+	// 这里传入的两个 key，一个是数据的 authentication key
+	// 另外一个是加密 key，用于保证 cookie 的安全性。
+	store := cookie.NewStore([]byte("secret"))
+	// cookie 的名字叫做ssid
+	server.Use(sessions.Sessions("ssid", store))
+	// 登录校验
+	login := &middleware.LoginMiddlewareBuilder{}
+	server.Use(login.CheckLogin())
+
 	return server
 }
 
