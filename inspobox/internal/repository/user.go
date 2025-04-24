@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"inspobox/webook/internal/domain"
-	"inspobox/webook/internal/repository/dao"
+	"inspobox/inspobox/internal/domain"
+	"inspobox/inspobox/internal/repository/dao"
 )
 
 var ErrUserDuplicateEmail = dao.ErrUserDuplicateEmail
